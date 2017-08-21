@@ -1,6 +1,6 @@
 //Parser expects commands to be separated by semicolons (;) and will ignore input that is not terminated this way
 //To test, send commands like "p;" or "s;"
-//Parser also processes command indices (ie "p1;" "t5")
+//Parser also processes command indices (ie "p1;" "t5;")
 //and space-separated data (ie "p 123;")
 //or all of the above (ie "p1 1234,64356;")
 #include "SerialCmdParser.h"
