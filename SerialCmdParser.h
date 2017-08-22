@@ -16,10 +16,12 @@ class SerialCmdParser{
     SerialCmdParser(char * _cmds, int _num_cmds){
       num_cmds = _num_cmds;
       cmds = (char *)calloc(num_cmds, sizeof(char));
+      memcpy(cmds, _cmds, num_cmds*sizeof(char));
     }
     SerialCmdParser(char * _cmds, int _num_cmds, callback _function){
       num_cmds = _num_cmds;
       cmds = (char *)calloc(num_cmds, sizeof(char));
+      memcpy(cmds, _cmds, num_cmds*sizeof(char));
       callback_f = _function;
     }
 
