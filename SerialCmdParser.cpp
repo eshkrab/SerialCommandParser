@@ -71,7 +71,6 @@ void SerialCmdParser::update(){
     if (bytes_left > 0) {
       char temp[bytes_left];
       memcpy(temp, cmd_ptr+1, bytes_left);
-      Serial.println(temp);
       memset(bytes, 0, num_bytes);
       memcpy(bytes, temp, bytes_left);
       cmd_ptr = strchr(bytes, ';');
@@ -79,5 +78,4 @@ void SerialCmdParser::update(){
       cmd_ptr = NULL;
     }
   }
-
 }
