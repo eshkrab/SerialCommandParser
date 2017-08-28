@@ -66,6 +66,8 @@ void SerialCmdParser::update(){
       }
     }
     
+    free(data);
+
     //parse other commands in the buffer if there are any
     int bytes_left = num_bytes-cmd_size+1;
     if (bytes_left > 0) {
