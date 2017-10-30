@@ -18,25 +18,14 @@ void SerialCmdParser::update(){
   if (port == NULL) Serial.readBytes(bytes, num_bytes); //if using default Serial port
   else port->readBytes(bytes, num_bytes);               //user specified another port
 
-  Serial.print("bytes in:");
-  Serial.println(bytes);
   //split string into commands, separated by ";"
   char * cmd_ptr;
   cmd_ptr = strchr(bytes, ';');
   while (cmd_ptr != NULL){
-    int cmd_size = cmd_ptr - bytes;
+    int cmd_size = (cmd_ptr +1) - bytes;
     char * cmd_str = new char[cmd_size+1]();
-    // char cmd_str[cmd_size+1];
     strncpy(cmd_str, bytes, cmd_size);
-    cmd_str[cmd_size+1] = '\0';
-
-    // Serial.print("cmd_size:");
-    // Serial.println(cmd_size);
-    // Serial.print("cmd_str:");
-    // Serial.println(cmd_str);
-    // Serial.println("-----");
-
-
+    cmd_str[cmd_size] = '\0';
 
     //parse out cmd_str into cmd, cmd_idx, and data
     //find space separated tokens, first part is the cmd+cmd index, second is data
@@ -46,7 +35,7 @@ void SerialCmdParser::update(){
     int cmd_idx = 0;
     // int hdr_len = strcspn(cmd_str, " ");
     char * tok_ptr = strtok(cmd_str, " ");
-    sprintf(hdr, "%s\n", tok_ptr);
+    sprintf(hdr, "%s\0", tok_ptr);
     
     //look for characters in the command list
     char * c_ptr = NULL;
@@ -67,7 +56,7 @@ void SerialCmdParser::update(){
     if (tok_ptr != NULL) {
       int data_size = strlen(tok_ptr);
       data = new char[data_size];
-      sprintf(data, "%s\n", tok_ptr);
+      sprintf(data, "%s\0", tok_ptr);
       // Serial.print("data: ");
       // Serial.println(data);
     }
@@ -84,17 +73,24 @@ void SerialCmdParser::update(){
     delete cmd_str;
 
     //parse other commands in the buffer if there are any
-    int bytes_left = num_bytes-cmd_size+1;
+    int bytes_left = num_bytes-(cmd_size+1);
     if (bytes_left > 0) {
-      Serial.print(bytes_left);
-      Serial.println("chars left");
-      char temp[bytes_left];
+      // Serial.print(bytes_left);
+      // Serial.println(" bytes left");
+      char * temp = new char[bytes_left+1]();
       memcpy(temp, cmd_ptr+1, bytes_left);
-      memset(bytes, 0, num_bytes);
+      temp[bytes_left] = '\0';
+      memset(bytes, '\0', num_bytes);
       memcpy(bytes, temp, bytes_left);
+      bytes[bytes_left] = '\0';
       cmd_ptr = strchr(bytes, ';');
-      Serial.print("chars:");
-      Serial.println(cmd_ptr);
+      // Serial.print("cmd_size:");
+      // Serial.println(cmd_size);
+      // Serial.print("bytes:");
+      // Serial.println(bytes);
+      // Serial.println("-----------");
+      delete temp;
+      // num_bytes = bytes_left;
     }else {
       cmd_ptr = NULL;
     }
