@@ -33,7 +33,6 @@ void SerialCmdParser::update(){
     char * data = NULL;
     char cmd_char = ' ';
     int cmd_idx = 0;
-    // int hdr_len = strcspn(cmd_str, " ");
     char * tok_ptr = strtok(cmd_str, " ");
     sprintf(hdr, "%s\0", tok_ptr);
     
@@ -75,8 +74,6 @@ void SerialCmdParser::update(){
     //parse other commands in the buffer if there are any
     int bytes_left = num_bytes-(cmd_size+1);
     if (bytes_left > 0) {
-      // Serial.print(bytes_left);
-      // Serial.println(" bytes left");
       char * temp = new char[bytes_left+1]();
       memcpy(temp, cmd_ptr+1, bytes_left);
       temp[bytes_left] = '\0';
@@ -84,13 +81,7 @@ void SerialCmdParser::update(){
       memcpy(bytes, temp, bytes_left);
       bytes[bytes_left] = '\0';
       cmd_ptr = strchr(bytes, ';');
-      // Serial.print("cmd_size:");
-      // Serial.println(cmd_size);
-      // Serial.print("bytes:");
-      // Serial.println(bytes);
-      // Serial.println("-----------");
       delete temp;
-      // num_bytes = bytes_left;
     }else {
       cmd_ptr = NULL;
     }
